@@ -16187,7 +16187,8 @@ with pkgs;
 
   xenPackages = recurseIntoAttrs (callPackage ../applications/virtualization/xen/packages.nix {});
 
-  xen = xenPackages.xen_4_5-vanilla;
+  xen_4_5 = xenPackages.xen_4_5-vanilla;
+  xen = xenPackages.xen;
   xen-slim = xenPackages.xen_4_5-slim;
   xen-light = xenPackages.xen_4_5-light;
 

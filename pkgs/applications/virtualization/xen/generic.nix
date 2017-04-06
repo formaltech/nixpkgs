@@ -153,12 +153,13 @@ stdenv.mkDerivation (rec {
       --replace /usr/include/curses.h ${ncurses.dev}/include/curses.h
 
     # TODO: use this as a template and support our own if-up scripts instead?
+    '' + (if version == "4.5.5" then ''
     substituteInPlace tools/hotplug/Linux/xen-backend.rules.in \
       --replace "@XEN_SCRIPT_DIR@" $out/etc/xen/scripts
 
     # blktap is not provided by xen, but by xapi
-    sed -i '/blktap/d' tools/hotplug/Linux/xen-backend.rules.in
-
+    sed -i '/blktap/d' tools/hotplug/Linux/xen-backend.rules.in ''
+    else "") + ''
     ${withTools "patches" (name: x: ''
       ${concatMapStringsSep "\n" (p: ''
         echo "# Patching with ${p}"
@@ -185,7 +186,7 @@ stdenv.mkDerivation (rec {
   '';
 
   installPhase = ''
-    mkdir -p $out $out/share
+    mkdir -p $out $out/share/man
     cp -prvd dist/install/nix/store/*/* $out/
     cp -prvd dist/install/boot $out/boot
     cp -prvd dist/install/etc $out
